@@ -1,0 +1,304 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+
+void StartGameScreen(void);
+void CreateSaveFile(void);
+void OpenMainMenu(void);
+void SaveGame(void);
+void PrintMap_arr(void);
+void Print_Inventory(void);
+void PrintIllustratedGuide(void);
+void PrintDescription(void);
+void StageClearScreen(void);
+void PrintStore(void);
+void StagePlay(int stage);
+
+void StagePlay(int stage)
+{
+    printf("------------------------------------------\n");
+    printf("               스테이지 %d                \n", stage);
+    printf("스테이지%d 전투 시작!\n", stage);
+    StageClearScreen(); 
+}
+
+void CreateSaveFile(void)
+{
+    FILE* fp = NULL;
+    if (fopen_s(&fp, "savefile.txt", "w") != 0 || fp == NULL)
+    {
+        printf("savefile.txt 생성 실패\n");
+        return;
+    }
+    fputs("", fp);
+    fclose(fp);
+    printf("데이터 초기화 완료\n");
+}
+
+void StartGameScreen(void)
+{
+    int input = 0;
+    printf("------------------------------------------\n");
+    printf("               게임 이름                  \n");
+    printf("1. 게임 시작\n");
+    printf("2. 데이터 삭제\n");
+    printf("3. 종료\n");
+    printf("입력 : ");
+    scanf_s("%d", &input);
+    printf("------------------------------------------\n");
+
+    switch (input)
+    {
+    case 1:
+        OpenMainMenu();
+        break;
+    case 2:
+        CreateSaveFile();
+        break;
+    case 3:
+        printf("게임을 종료합니다.\n");
+        exit(0);
+        break;
+    default:
+        printf("잘못된 값을 입력했습니다.\n");
+        break;
+    }
+}
+
+#define MAX 1000
+
+void OpenMainMenu(void)
+{
+    int input;
+
+    while (1)
+    {
+        printf("------------------------------------------\n");
+        printf("                 메인 메뉴                \n\n");
+        printf("1. 맵 선택\n");
+        printf("2. 인벤토리\n");
+        printf("3. 상점\n");
+        printf("4. 장비 도감\n");
+        printf("5. 공격 설명\n");
+        printf("6. 저장\n");
+        printf("7. 종료\n\n");
+        printf("입력 : ");
+        scanf_s("%d", &input);
+        printf("------------------------------------------\n");
+
+        switch (input)
+        {
+        case 1: PrintMap_arr(); break;
+        case 2: Print_Inventory(); break;
+        case 3: PrintStore(); break;
+        case 4: PrintIllustratedGuide(); break;
+        case 5: PrintDescription(); break;
+        case 6: SaveGame(); break;
+        case 7: exit(0); break;
+        default: printf("잘못된 값을 입력했습니다.\n"); break;
+        }
+    }
+}
+
+void SaveGame(void)
+{
+    FILE* fp = NULL;
+    char buffer[MAX] = { 0 };
+
+    if (fopen_s(&fp, "savefile.txt", "r") != 0 || fp == NULL)
+    {
+        printf("저장 파일이 없습니다.\n");
+        return;
+    }
+
+    fread(buffer, 1, MAX, fp);
+    printf("%s\n", buffer);
+    fclose(fp);
+}
+
+void PrintMap_arr(void)
+{
+    int input;
+    while (1)
+    {
+        printf("------------------------------------------\n");
+        printf("                 맵 선택                  \n\n");
+        printf("1. 스테이지 1\n");
+        printf("2. 스테이지 2\n");
+        printf("3. 스테이지 3\n\n");
+        printf("입력 : ");
+        scanf_s("%d", &input);
+        printf("------------------------------------------\n");
+
+        if (input >= 1 && input <= 3)
+        {
+            StagePlay(input); 
+            break;
+        }
+        else
+        {
+            printf("잘못된 값을 입력했습니다.\n");
+        }
+    }
+}
+
+void Print_Inventory(void)
+{
+    srand((unsigned int)time(NULL));
+
+    char head[20] = "없음";
+    char body[20] = "없음";
+    char legs[20] = "없음";
+    char weapon[20] = "없음";
+
+    int hp = rand() % 101 + 50;
+    double damageMultiplier = (rand() % 51 + 50) / 100.0;
+
+    int usable[4];
+    char type[4][10];
+    for (int i = 0; i < 4; i++)
+    {
+        usable[i] = rand() % 8 + 1;
+        if (usable[i] >= 1 && usable[i] <= 4) strcpy(type[i], "공격");
+        else strcpy(type[i], "방어");
+    }
+
+    printf("------------------------------------------\n");
+    printf("                 인벤토리                 \n\n");
+
+    printf("착용중인 장비:\n");
+    printf("머리  : %s\n", head);
+    printf("몸통  : %s\n", body);
+    printf("다리  : %s\n", legs);
+    printf("무기  : %s\n\n", weapon);
+
+    printf("스탯:\n");
+    printf("체력: %d\t데미지 배율: %.2f\n\n", hp, damageMultiplier);
+
+    printf("사용 가능 숫자:\n");
+    for (int i = 0; i < 4; i++)
+    {
+        printf("%d (%s)\t", usable[i], type[i]);
+    }
+    printf("\n\n------------------------------------------\n");
+
+    printf("보유 장비:\n");
+    printf("1. 철 투구\n");
+    printf("2. 가죽 갑옷\n");
+    printf("3. 바지\n");
+    printf("4. 검\n\n");
+
+    printf("착용 장비 입력: ");
+    int input;
+    scanf_s("%d", &input);
+    printf("------------------------------------------\n");
+}
+
+void PrintIllustratedGuide(void)
+{
+    int page = 1;
+    int input;
+    int maxPage = 3;
+    const int width = 40;
+    int exitFlag = 0;
+
+    while (!exitFlag)
+    {
+        printf("---------------------------\n");
+        char title[] = "장비 도감";
+        int padding = (width - (int)strlen(title)) / 2;
+        for (int i = 0; i < padding; i++) printf(" ");
+        printf("%s\n", title);
+        printf("---------------------------\n\n");
+
+        printf("-- 페이지 %d --\n", page);
+        int start = (page - 1) * 6 + 1;
+        for (int i = start; i < start + 6; i++)
+            printf("%d\n", i);
+
+        printf("\n1. 이전 페이지  2. 다음 페이지  3. 메인메뉴\n입력 : ");
+        scanf_s("%d", &input);
+        printf("\n");
+
+        if (input == 1 && page > 1) page--;
+        else if (input == 2 && page < maxPage) page++;
+        else if (input == 3) exitFlag = 1;
+        else printf("잘못된 값을 입력했습니다.\n\n");
+    }
+}
+
+void PrintDescription(void)
+{
+    int attackInput;
+    while (1)
+    {
+        printf("------------------------------------------\n");
+        printf("                 공격 설명                \n\n");
+        printf("- 방어형 숫자\n1\t2\t3\t4\n\n");
+        printf("- 공격형 숫자\n5\t6\t7\t8\n\n");
+        printf("9 (유니크 아이템 전용)\n");
+        printf("------------------------------------------\n\n");
+        printf("공격 입력 테스트\n입력 : ");
+        scanf_s("%d", &attackInput);
+        if (attackInput >= 1 && attackInput <= 9) break;
+        printf("잘못된 값을 입력했습니다.\n");
+    }
+    printf("------------------------------------------\n");
+    printf("입력한 공격 숫자: %d\n", attackInput);
+}
+
+void StageClearScreen(void)
+{
+    srand((unsigned int)time(NULL));
+    int attackDamage = rand() % 501 + 500;
+    int defenseSuccessDamage = rand() % 201 + 100;
+    int damageTaken = rand() % 301 + 200;
+    int defenseFailDamage = rand() % 101 + 50;
+    double damageMultiplierIncrease = (rand() % 21 + 10);
+    double damageMultiplierDecrease = (rand() % 11 + 5);
+    int acquiredItems = rand() % 4 + 1;
+    int usedRecoveryItems = rand() % 3;
+
+    int numberUsage[8];
+    for (int i = 0; i < 8; i++) numberUsage[i] = rand() % 6;
+
+    printf("---------------스테이지 클리어---------------------\n\n");
+    printf("축하합니다. 스테이지를 모두 클리어 하였습니다.\n");
+    printf("획득한 절리품은 모두 인벤토리로 귀속 됩니다.\n");
+    printf("전투를 통해 증가한 데미지 배율은 다시 원래 상태로 돌아갑니다.\n");
+    printf("아래는 이번 스테이지 전투 결과 입니다.\n\n");
+    printf("---------------------------------\n\n");
+
+    printf("공격으로 가한 피해량: %d\n", attackDamage);
+    printf("성공적인 방어로 가한 피해량: %d\n", defenseSuccessDamage);
+    printf("적으로부터 받은 피해량: %d\n", damageTaken);
+    printf("방어 실패로 받은 피해량: %d\n", defenseFailDamage);
+    printf("증가한 데미지 배율: %.1f%%\n", damageMultiplierIncrease);
+    printf("감소한 데미지 배율: %.1f%%\n", damageMultiplierDecrease);
+    printf("획득한 장비 수: %d개\n", acquiredItems);
+    printf("사용한 회복 아이템 수: %d개\n\n", usedRecoveryItems);
+
+    printf("숫자 사용 빈도:\n");
+    for (int i = 0; i < 8; i++)
+    {
+        printf("%d: %d회\t", i + 1, numberUsage[i]);
+        if ((i + 1) % 4 == 0) printf("\n");
+    }
+    printf("\n");
+}
+
+void PrintStore(void)
+{
+    printf("------------------------------------------\n");
+    printf("                  상점                    \n\n");
+    printf("상점 기능은 아직 구현되지 않았습니다.\n");
+    printf("------------------------------------------\n");
+}
+
+int main(void)
+{
+    StartGameScreen();
+    return 0;
+}
