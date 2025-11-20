@@ -1,0 +1,44 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX 1000
+
+
+void OpenMainMenu(void)
+{
+    int input;
+    printf("------------------------------------------\n");
+    printf("                메인 메뉴                 \n\n");
+    printf("1. 맵\n");
+    printf("2. 인벤토리\n");
+    printf("3. 상점\n");
+    printf("4. 장비 도감\n");
+    printf("5. 공격 설명\n");
+    printf("6. 저장\n");
+    printf("7. 종료\n\n");
+    printf("입력 : ");
+    scanf_s("%d", &input);
+    printf("------------------------------------------\n");
+
+    switch (input)
+    {
+    case 1: printf("맵 선택 메뉴로 이동합니다.\n"); break;
+    case 2: printf("인벤토리 메뉴로 이동합니다.\n"); break;
+    case 3: printf("상점 메뉴로 이동합니다.\n"); break;
+    case 4: printf("장비 도감 메뉴로 이동합니다.\n"); break;
+    case 5: printf("공격 설명 메뉴로 이동합니다.\n"); break;
+    case 6: printf("게임 저장 기능 실행 (미구현)\n"); break;
+    case 7:
+        printf("게임을 종료합니다.\n");
+        exit(0);
+    default:
+        printf("잘못된 값을 입력했습니다.\n");
+        break;
+    }
+}
+
+int main(void)
+{
+    OpenMainMenu();
+    return 0;
+}
