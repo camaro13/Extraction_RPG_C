@@ -185,10 +185,10 @@ void Print_Inventory(void)
     printf("\n\n------------------------------------------\n");
 
     printf("보유 장비:\n");
-    printf("1. 철 투구\n");
-    printf("2. 가죽 갑옷\n");
-    printf("3. 바지\n");
-    printf("4. 검\n\n");
+    printf("1. -- 투구\n");
+    printf("2. -- 갑옷\n");
+    printf("3. -- 바지\n");
+    printf("4. -- 검\n\n");
 
     printf("착용 장비 입력: ");
     int input;
@@ -206,12 +206,12 @@ void PrintIllustratedGuide(void)
 
     while (!exitFlag)
     {
-        printf("---------------------------\n");
+        printf("------------------------------------------\n");
         char title[] = "장비 도감";
         int padding = (width - (int)strlen(title)) / 2;
         for (int i = 0; i < padding; i++) printf(" ");
         printf("%s\n", title);
-        printf("---------------------------\n\n");
+        printf("------------------------------------------\n\n");
 
         printf("-- 페이지 %d --\n", page);
         int start = (page - 1) * 6 + 1;
@@ -266,7 +266,7 @@ void StageClearScreen(void)
 
     printf("---------------스테이지 클리어---------------------\n\n");
     printf("축하합니다. 스테이지를 모두 클리어 하였습니다.\n");
-    printf("획득한 절리품은 모두 인벤토리로 귀속 됩니다.\n");
+    printf("획득한 전리품은 모두 인벤토리로 귀속 됩니다.\n");
     printf("전투를 통해 증가한 데미지 배율은 다시 원래 상태로 돌아갑니다.\n");
     printf("아래는 이번 스테이지 전투 결과 입니다.\n\n");
     printf("---------------------------------\n\n");
